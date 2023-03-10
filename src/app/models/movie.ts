@@ -2,6 +2,7 @@ export interface Movie {
   adult: boolean;
   backdrop_path: String;
   genre_ids: number[];
+  genres: Genre[];
   id: number;
   original_language: string;
   original_title: string;
@@ -13,6 +14,9 @@ export interface Movie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  revenue: number;
+  runtime: number;
+  status: string;
 }
 
 export interface MovieDto {
@@ -20,4 +24,9 @@ export interface MovieDto {
   results: Movie[];
   total_results: number;
   total_pages: number;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }

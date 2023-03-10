@@ -1,0 +1,24 @@
+@import '../../../styles/colora';
+
+.poster {
+  max-width: 100%;
+}
+
+.overview {
+  line-height: 1.5;
+  margin-bottom: 50px;
+}
+
+.stat {
+  display: flex;
+  margin-bottom: 15px;
+
+  .label {
+    width: 150px;
+    font-size: bold;
+  }
+
+  .value {
+    color: $primaryColor;
+  }
+}

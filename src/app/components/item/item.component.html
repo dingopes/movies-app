@@ -1,5 +1,5 @@
 <ng-container *ngIf="itemData">
-  <a class="item">
+  <a class="item" [routerLink]="'/detail/' + itemData.id">
     <div class="item-rating">
       <i class="app-icon">star</i>
       <span>{{ itemData.vote_average }}</span

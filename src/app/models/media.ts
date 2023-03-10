@@ -9,3 +9,20 @@ export interface MediaDto {
   total_results: number;
   total_pages: number;
 }
+
+export interface MediaVideoDto {
+  id: number;
+  results: MediaVideo[];
+}
+
+export interface MediaVideo {
+  site: string;
+  key: string;
+}
+
+export interface MediaProviderDTO {
+  id: number;
+  results: MediaProvider[];
+}
+
+export interface MediaProvider {}

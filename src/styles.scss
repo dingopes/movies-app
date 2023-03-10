@@ -6,7 +6,7 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import '~primeflex/primeflex.css';
 @import '~primeicons/primeicons.css';
-@import '~primeng/resources/themes/vela-orange/theme.css';
+@import '~primeng/resources/themes/arya-orange/theme.css';
 @import '~primeng/resources/primeng.min.css';
 
 body {
@@ -38,4 +38,20 @@ a {
 .container {
   margin: 0.5rem;
   padding: 0.5rem;
+}
+
+.p-tabview-nav {
+  justify-content: center;
+
+  li .p-tabview-nav-link {
+    background: $bgcolor;
+  }
+
+  li.p-highlight .p-tabview-nav-link {
+    background: $bgcolor;
+  }
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  box-shadow: none;
 }
