@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MediaVideo } from 'src/app/models/media';
 import { Movie } from 'src/app/models/movie';
+import { MediaProviderLink } from 'src/app/models/providers';
 import { MoviesService } from 'src/app/services/movies.service';
 import { IMAGES_SIZES } from '../../constants/images-sizes';
 
@@ -13,8 +14,10 @@ import { IMAGES_SIZES } from '../../constants/images-sizes';
 export class DetailComponent implements OnInit {
   detail: Movie | null = null;
   mediaVideos: MediaVideo[] = [];
-  mediaProviders: MediaProvider[] = [];
   imagesSizes = IMAGES_SIZES;
+  providersBuy: MediaProviderLink[] = [];
+  providersFlatrate: MediaProviderLink[] = [];
+  providersRent: MediaProviderLink[] = [];
 
   constructor(private route: ActivatedRoute, private moviesService: MoviesService) {}
 
@@ -22,7 +25,7 @@ export class DetailComponent implements OnInit {
     this.route.params.subscribe(({ id }) => {
       this.getDetail(id);
       this.getMediaVideos(id);
-      this.getMediaProviders(id);
+      this.getMediaProviders(id, 'CZ');
     });
   }
 
@@ -38,9 +41,14 @@ export class DetailComponent implements OnInit {
     });
   }
 
-  getMediaProviders(id: string) {
-    this.moviesService.getMediaProviders(id).subscribe((mediaProvidersData) => {
-      this.mediaProviders = mediaProvidersData;
-    });
+  async getMediaProviders(id: number, locale: string) {
+    try {
+      const result = await this.moviesService.MediaProviders(id.toString(), locale);
+      this.providersBuy = result.buy;
+      this.providersFlatrate = result.flatrate;
+      this.providersRent = result.rent;
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

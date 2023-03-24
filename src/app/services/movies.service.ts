@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Movie, MovieDto } from '../models/movie';
 import { TvDto } from '../models/tv';
 import { Media, MediaDto, MediaVideoDto } from '../models/media';
-import { switchMap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { of } from 'rxjs';
+import { MediaProviderLink, MediaProviders, MediaProvidersLists } from '../models/providers';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceNameService {
@@ -59,5 +60,29 @@ export class MoviesService {
         return of(res.results.slice(0, count));
       })
     );
+  }
+
+  // getMediaProvider(id: string) {
+  //   return this.http
+  //     .get<any>(`${this.baseUrl}/movie/${id}/watch/providers?api_key=${this.apiKey}`)
+  //     .pipe(
+  //       switchMap((res) => {
+  //         return of(res.results);
+  //       })
+  //     );
+  // }
+
+  async MediaProviders(id: string, locale: string): Promise<MediaProvidersLists> {
+    const response = await fetch(
+      `${this.baseUrl}/movie/${id}/watch/providers?api_key=${this.apiKey}`
+    );
+
+    const jsonData: MediaProviders = await response.json();
+    console.log('test providers', jsonData);
+    const buy = Object.values(jsonData.results[locale]?.buy || {});
+    const flatrate = Object.values(jsonData.results[locale]?.flatrate || {});
+    const rent = Object.values(jsonData.results[locale]?.rent || {});
+    const providers: MediaProvidersLists = { buy: buy, flatrate: flatrate, rent: rent };
+    return providers;
   }
 }

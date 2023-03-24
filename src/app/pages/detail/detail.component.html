@@ -1,5 +1,6 @@
 <ng-container *ngIf="detail">
   <slider [items]="[detail]" [isBanner]="true"></slider>
+
   <p-tabView class="p-justify-center">
     <p-tabPanel header="Overview">
       <div class="grid">
@@ -49,6 +50,32 @@
               {{ detail.revenue | currency }}
             </div>
           </div>
+          <div class="stat">
+            <div class="label">Buy</div>
+            <div class="value">
+              <ng-container *ngIf="providersBuy.length">
+                <div class="providers" *ngFor="let provider of providersBuy">
+                  <span>{{ provider.provider_name }}</span>
+                </div>
+              </ng-container>
+            </div>
+            <br />
+            <br />
+          </div>
+          Stream
+          <ng-container *ngIf="providersFlatrate.length">
+            <div class="providers" *ngFor="let provider of providersFlatrate">
+              <span>{{ provider.provider_name }}</span>
+            </div>
+          </ng-container>
+          <br />
+          <br />
+          Rent
+          <ng-container *ngIf="providersRent.length">
+            <div class="providers" *ngFor="let provider of providersRent">
+              <span>{{ provider.provider_name }}</span>
+            </div>
+          </ng-container>
         </div>
       </div>
     </p-tabPanel>
