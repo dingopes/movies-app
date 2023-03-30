@@ -1,5 +1,5 @@
 <ng-container [ngSwitch]="site">
-  <ng-container [ngSwitch]="'Youtube'">
+  <ng-container *ngSwitchCase="'YouTube'">
     <iframe
       width="100%"
       height="315"
@@ -11,7 +11,7 @@
     ></iframe>
   </ng-container>
 
-  <ng-container [ngSwitch]="'Vimeo'">
+  <ng-container *ngSwitchCase="'Vimeo'">
     <iframe
       title="vimeo-player"
       [src]="videoUrl"
