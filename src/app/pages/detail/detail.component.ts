@@ -38,6 +38,7 @@ export class DetailComponent implements OnInit {
   getMediaVideos(id: string) {
     this.moviesService.getMediaVideos(id).subscribe((mediaVideosData) => {
       this.mediaVideos = mediaVideosData;
+      console.log('test', this.mediaVideos);
     });
   }
 

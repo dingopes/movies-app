@@ -80,7 +80,13 @@
       </div>
     </p-tabPanel>
     <p-tabPanel header="Videos">
-      <pre>{{ mediaVideos | json }}</pre>
+      <div class="grid">
+        <ng-container *ngFor="let mediaVideo of mediaVideos">
+          <div class="col-12 md:col-4 lg:col-4">
+            <video-embed [key]="mediaVideo.key" [site]="mediaVideo.site"></video-embed>
+          </div>
+        </ng-container>
+      </div>
     </p-tabPanel>
     <p-tabPanel header="Photos"> Content 3 </p-tabPanel>
   </p-tabView>
