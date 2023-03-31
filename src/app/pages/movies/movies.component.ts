@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { take } from 'rxjs/operators';
 import { Media, MediaImages } from 'src/app/models/media';
 import { Movie } from 'src/app/models/movie';
 import { MoviesService } from 'src/app/services/movies.service';
@@ -11,9 +13,19 @@ import { MoviesService } from 'src/app/services/movies.service';
 export class MoviesComponent implements OnInit {
   movies: Media[] = [];
   mediaImages: MediaImages | null = null;
-  constructor(private moviesService: MoviesService) {}
+  genreId: string | null = null;
+
+  constructor(private moviesService: MoviesService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.route.params.pipe(take(1)).subscribe(({ genreId }) => {
+      if (genreId) {
+        this.genreId = genreId;
+        this.getMediaByGenre(genreId, 1);
+      } else {
+        this.getPagedMovies(1);
+      }
+    });
     this.getPagedMovies(1);
   }
 
@@ -22,8 +34,20 @@ export class MoviesComponent implements OnInit {
       this.movies = movies;
     });
   }
+
+  getMediaByGenre(genreId: string, page: number) {
+    this.moviesService.getMediaByGenre(genreId, page).subscribe((movies) => {
+      this.movies = movies;
+    });
+  }
+
   paginate(event: any) {
-    this.getPagedMovies(event.page + 1);
+    const pageNumber = event.page + 1;
+    if (this.genreId) {
+      this.getMediaByGenre(this.genreId, pageNumber);
+    } else {
+      this.getPagedMovies(event.page + 1);
+    }
   }
 
   getMediaImages(id: string) {

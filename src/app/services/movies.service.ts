@@ -7,6 +7,7 @@ import { Media, MediaCredits, MediaDto, MediaImages, MediaVideoDto } from '../mo
 import { Observable, switchMap } from 'rxjs';
 import { of } from 'rxjs';
 import { MediaProviderLink, MediaProviders, MediaProvidersLists } from '../models/providers';
+import { GenresDto } from '../models/genre';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceNameService {
@@ -30,6 +31,18 @@ export class MoviesService {
     );
   }
 
+  getMediaByGenre(genreId: string, pageNumber: number) {
+    return this.http
+      .get<MediaDto>(
+        `${this.baseUrl}/discover/movie?with_genres=${genreId}&page=${pageNumber}&api_key=${this.apiKey}`
+      )
+      .pipe(
+        switchMap((res) => {
+          return of(res.results);
+        })
+      );
+  }
+
   getMediaVideos(id: string) {
     return this.http
       .get<MediaVideoDto>(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}`)
@@ -39,6 +52,15 @@ export class MoviesService {
         })
       );
   }
+
+  getMediaGengres() {
+    return this.http.get<GenresDto>(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}`).pipe(
+      switchMap((res) => {
+        return of(res.genres);
+      })
+    );
+  }
+
   getMediaImages(id: string) {
     return this.http.get<MediaImages>(`${this.baseUrl}/movie/${id}/images?api_key=${this.apiKey}`);
   }
