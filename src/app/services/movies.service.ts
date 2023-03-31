@@ -53,6 +53,16 @@ export class MoviesService {
     return this.http.get<Movie>(`${this.baseUrl}/movie/${id}?api_key=${this.apiKey}`).pipe();
   }
 
+  getSimilarMedia(id: string) {
+    return this.http
+      .get<MediaDto>(`${this.baseUrl}/movie/${id}/similar?api_key=${this.apiKey}`)
+      .pipe(
+        switchMap((res) => {
+          return of(res.results);
+        })
+      );
+  }
+
   searchMovies(page: number) {
     return this.http
       .get<MediaDto>(`${this.baseUrl}/movie/popular?page=${page}&api_key=${this.apiKey}`)
