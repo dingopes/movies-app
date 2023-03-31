@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MediaVideo } from 'src/app/models/media';
+import { MediaCredits, MediaImages, MediaVideo } from 'src/app/models/media';
 import { Movie } from 'src/app/models/movie';
 import { MediaProviderLink } from 'src/app/models/providers';
 import { MoviesService } from 'src/app/services/movies.service';
@@ -18,7 +18,8 @@ export class DetailComponent implements OnInit {
   providersBuy: MediaProviderLink[] = [];
   providersFlatrate: MediaProviderLink[] = [];
   providersRent: MediaProviderLink[] = [];
-
+  mediaImages: MediaImages | null = null;
+  mediaCredits: MediaCredits | null = null;
   constructor(private route: ActivatedRoute, private moviesService: MoviesService) {}
 
   ngOnInit(): void {
@@ -26,6 +27,8 @@ export class DetailComponent implements OnInit {
       this.getDetail(id);
       this.getMediaVideos(id);
       this.getMediaProviders(id, 'CZ');
+      this.getMediaImages(id);
+      this.getMediaCredits(id);
     });
   }
 
@@ -35,10 +38,27 @@ export class DetailComponent implements OnInit {
       console.log(this.detail);
     });
   }
+
+  getMediaCredits(id: string) {
+    this.moviesService.getMediaCredits(id).subscribe((mediaCreditData) => {
+      const cast = mediaCreditData.cast
+        .filter((credit) => credit.profile_path !== null)
+        .map((credit) => ({ name: credit.name, profile_path: credit.profile_path }));
+      this.mediaCredits = { cast };
+      console.log('testmediacredits', this.mediaCredits);
+    });
+  }
+
   getMediaVideos(id: string) {
     this.moviesService.getMediaVideos(id).subscribe((mediaVideosData) => {
       this.mediaVideos = mediaVideosData;
       console.log('test', this.mediaVideos);
+    });
+  }
+  getMediaImages(id: string) {
+    this.moviesService.getMediaImages(id).subscribe((imagesData) => {
+      this.mediaImages = imagesData;
+      console.log('test media images', imagesData);
     });
   }
 

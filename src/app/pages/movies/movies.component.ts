@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Media } from 'src/app/models/media';
+import { Media, MediaImages } from 'src/app/models/media';
 import { Movie } from 'src/app/models/movie';
 import { MoviesService } from 'src/app/services/movies.service';
 
@@ -10,7 +10,7 @@ import { MoviesService } from 'src/app/services/movies.service';
 })
 export class MoviesComponent implements OnInit {
   movies: Media[] = [];
-
+  mediaImages: MediaImages | null = null;
   constructor(private moviesService: MoviesService) {}
 
   ngOnInit(): void {
@@ -24,5 +24,11 @@ export class MoviesComponent implements OnInit {
   }
   paginate(event: any) {
     this.getPagedMovies(event.page + 1);
+  }
+
+  getMediaImages(id: string) {
+    this.moviesService.getMediaImages(id).subscribe((mediaImagesData) => {
+      this.mediaImages = mediaImagesData;
+    });
   }
 }

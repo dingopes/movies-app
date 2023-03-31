@@ -26,3 +26,16 @@ export interface MediaProviderDTO {
 }
 
 export interface MediaProvider {}
+
+export interface MediaImages {
+  backdrops: {
+    file_path: string;
+  }[];
+}
+
+export interface MediaCredits {
+  cast: {
+    name: string;
+    profile_path: string;
+  }[];
+}

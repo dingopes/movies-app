@@ -18,7 +18,7 @@ export class VideoEmbedComponent implements OnInit {
     if (this.site && this.key) {
       switch (this.site) {
         case 'YouTube':
-          this.videoUrl = this.sanitizedUrl('https://www.youtube.com/embed/' + this.key);
+          this.videoUrl = this.sanitizedUrl('http://www.youtube.com/embed/' + this.key);
           break;
         case 'Vimeo':
           this.videoUrl = this.sanitizedUrl('https://www.vimeo.com/' + this.key);

@@ -88,6 +88,29 @@
         </ng-container>
       </div>
     </p-tabPanel>
-    <p-tabPanel header="Photos"> Content 3 </p-tabPanel>
+    <p-tabPanel header="Photos">
+      <div class="grid">
+        <ng-container *ngFor="let mediaImage of mediaImages?.backdrops">
+          <div class="col-12 md:col-4 lg:col-4">
+            <p-image
+              [src]="imagesSizes.large + mediaImage.file_path"
+              alt=""
+              width="100%"
+              [preview]="true"
+            ></p-image>
+          </div>
+        </ng-container>
+      </div>
+    </p-tabPanel>
   </p-tabView>
+
+  <p-carousel *ngIf="mediaCredits" [value]="mediaCredits.cast" [numVisible]="5">
+    <ng-template let-actor pTemplate="item">
+      <div class="actor">
+        <img [src]="imagesSizes.medium + actor.profile_path" alt="" />
+        <span>{{ actor.name }}</span>
+      </div>
+    </ng-template>
+  </p-carousel>
 </ng-container>
+<!-- *ngIf="actor.profile_path != null"  -->

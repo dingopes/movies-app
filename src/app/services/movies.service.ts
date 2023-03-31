@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Movie, MovieDto } from '../models/movie';
 import { TvDto } from '../models/tv';
-import { Media, MediaDto, MediaVideoDto } from '../models/media';
+import { Media, MediaCredits, MediaDto, MediaImages, MediaVideoDto } from '../models/media';
 import { Observable, switchMap } from 'rxjs';
 import { of } from 'rxjs';
 import { MediaProviderLink, MediaProviders, MediaProvidersLists } from '../models/providers';
@@ -38,6 +38,15 @@ export class MoviesService {
           return of(res.results);
         })
       );
+  }
+  getMediaImages(id: string) {
+    return this.http.get<MediaImages>(`${this.baseUrl}/movie/${id}/images?api_key=${this.apiKey}`);
+  }
+
+  getMediaCredits(id: string) {
+    return this.http.get<MediaCredits>(
+      `${this.baseUrl}/movie/${id}/credits?api_key=${this.apiKey}`
+    );
   }
 
   getDetail(id: string) {
