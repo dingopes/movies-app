@@ -103,11 +103,19 @@
       </div>
     </p-tabPanel>
   </p-tabView>
+  <p-carousel *ngIf="similarMedia" [value]="similarMedia" [numVisible]="8">
+    <ng-template let-movie pTemplate="item">
+      <div class="title">
+        <img [src]="imagesSizes.small + movie.poster_path" alt="" />
+        <span>{{ movie.title }}</span>
+      </div>
+    </ng-template>
+  </p-carousel>
 
-  <p-carousel *ngIf="mediaCredits" [value]="mediaCredits.cast" [numVisible]="5">
+  <p-carousel *ngIf="mediaCredits" [value]="mediaCredits.cast" [numVisible]="8">
     <ng-template let-actor pTemplate="item">
       <div class="actor">
-        <img [src]="imagesSizes.medium + actor.profile_path" alt="" />
+        <img [src]="imagesSizes.small + actor.profile_path" alt="" />
         <span>{{ actor.name }}</span>
       </div>
     </ng-template>
