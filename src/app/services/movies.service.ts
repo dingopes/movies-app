@@ -23,61 +23,30 @@ export class MoviesService {
 
   constructor(private http: HttpClient) {}
 
-  getMovies(type: string = 'upcoming', count: number = 12) {
-    return this.http.get<MediaDto>(`${this.baseUrl}/movie/${type}?api_key=${this.apiKey}`).pipe(
+  getMovies(type: string = 'upcoming', count: number = 12, mediaType: MediaType = MediaType.MOVIE) {
+    let url = `${this.baseUrl}/movie/${type}?api_key=${this.apiKey}`;
+    if (mediaType === MediaType.TVSHOW) {
+      url = `${this.baseUrl}/tv/${type}?api_key=${this.apiKey}`;
+    }
+    return this.http.get<MediaDto>(url).pipe(
       switchMap((res) => {
         return of(res.results.slice(0, count));
       })
     );
   }
 
-  getMediaByGenre(genreId: string, pageNumber: number) {
-    return this.http
-      .get<MediaDto>(
-        `${this.baseUrl}/discover/movie?with_genres=${genreId}&page=${pageNumber}&api_key=${this.apiKey}`
-      )
-      .pipe(
-        switchMap((res) => {
-          return of(res.results);
-        })
-      );
-  }
-
-  getMediaVideos(id: string) {
-    return this.http
-      .get<MediaVideoDto>(`${this.baseUrl}/movie/${id}/videos?api_key=${this.apiKey}`)
-      .pipe(
-        switchMap((res) => {
-          return of(res.results);
-        })
-      );
-  }
-
-  getMediaGengres() {
-    return this.http.get<GenresDto>(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}`).pipe(
+  getMediaByGenre(genreId: string, pageNumber: number, mediaType: MediaType = MediaType.MOVIE) {
+    const url = `${this.baseUrl}/discover/${mediaType}?with_genres=${genreId}&page=${pageNumber}&api_key=${this.apiKey}`;
+    return this.http.get<MediaDto>(url).pipe(
       switchMap((res) => {
-        return of(res.genres);
+        return of(res.results);
       })
     );
   }
 
-  getMediaImages(id: string) {
-    return this.http.get<MediaImages>(`${this.baseUrl}/movie/${id}/images?api_key=${this.apiKey}`);
-  }
-
-  getMediaCredits(id: string) {
-    return this.http.get<MediaCredits>(
-      `${this.baseUrl}/movie/${id}/credits?api_key=${this.apiKey}`
-    );
-  }
-
-  getDetail(id: string) {
-    return this.http.get<Movie>(`${this.baseUrl}/movie/${id}?api_key=${this.apiKey}`).pipe();
-  }
-
-  getSimilarMedia(id: string) {
+  getMediaVideos(id: string, mediaType: MediaType = MediaType.MOVIE) {
     return this.http
-      .get<MediaDto>(`${this.baseUrl}/movie/${id}/similar?api_key=${this.apiKey}`)
+      .get<MediaVideoDto>(`${this.baseUrl}/${mediaType}/${id}/videos?api_key=${this.apiKey}`)
       .pipe(
         switchMap((res) => {
           return of(res.results);
@@ -85,9 +54,67 @@ export class MoviesService {
       );
   }
 
-  searchMovies(page: number) {
+  getMediaGengres(mediaType: MediaType = MediaType.MOVIE) {
     return this.http
-      .get<MediaDto>(`${this.baseUrl}/movie/popular?page=${page}&api_key=${this.apiKey}`)
+      .get<GenresDto>(`${this.baseUrl}/genre/${mediaType}/list?api_key=${this.apiKey}`)
+      .pipe(
+        switchMap((res) => {
+          return of(res.genres);
+        })
+      );
+  }
+
+  getMediaImages(id: string, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http.get<MediaImages>(
+      `${this.baseUrl}/${mediaType}/${id}/images?api_key=${this.apiKey}`
+    );
+  }
+
+  getMediaCredits(id: string, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http.get<MediaCredits>(
+      `${this.baseUrl}/${mediaType}/${id}/credits?api_key=${this.apiKey}`
+    );
+  }
+
+  getDetail(id: string, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http.get<Movie>(`${this.baseUrl}/${mediaType}/${id}?api_key=${this.apiKey}`).pipe();
+  }
+
+  getSimilarMedia(id: string, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http
+      .get<MediaDto>(`${this.baseUrl}/${mediaType}/${id}/similar?api_key=${this.apiKey}`)
+      .pipe(
+        switchMap((res) => {
+          return of(res.results);
+        })
+      );
+  }
+
+  searchMovies(page: number, searchValue?: string, mediaType: MediaType = MediaType.MOVIE) {
+    const uri = searchValue ? `/search/${mediaType}` : `${mediaType}/popular`;
+    let fullUrl = `${this.baseUrl}${uri}?page=${page}&query=${searchValue}&api_key=${this.apiKey}`;
+
+    console.log('test search fullUrl', fullUrl);
+    return this.http.get<MediaDto>(fullUrl).pipe(
+      switchMap((res) => {
+        return of(res.results);
+      })
+    );
+  }
+
+  getAllMovies(page: number, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http
+      .get<MediaDto>(`${this.baseUrl}/${mediaType}/popular?page=${page}&api_key=${this.apiKey}`)
+      .pipe(
+        switchMap((res) => {
+          return of(res.results);
+        })
+      );
+  }
+
+  testSearchMovies(page: number, mediaType: MediaType = MediaType.MOVIE) {
+    return this.http
+      .get<MediaDto>(`${this.baseUrl}/${mediaType}/popular?page=${page}&api_key=${this.apiKey}`)
       .pipe(
         switchMap((res) => {
           return of(res.results);
@@ -113,17 +140,25 @@ export class MoviesService {
   //     );
   // }
 
-  async MediaProviders(id: string, locale: string): Promise<MediaProvidersLists> {
+  async MediaProviders(
+    id: string,
+    locale: string,
+    mediaType: MediaType = MediaType.MOVIE
+  ): Promise<MediaProvidersLists> {
     const response = await fetch(
-      `${this.baseUrl}/movie/${id}/watch/providers?api_key=${this.apiKey}`
+      `${this.baseUrl}/${mediaType}/${id}/watch/providers?api_key=${this.apiKey}`
     );
 
     const jsonData: MediaProviders = await response.json();
-    console.log('test providers', jsonData);
     const buy = Object.values(jsonData.results[locale]?.buy || {});
     const flatrate = Object.values(jsonData.results[locale]?.flatrate || {});
     const rent = Object.values(jsonData.results[locale]?.rent || {});
     const providers: MediaProvidersLists = { buy: buy, flatrate: flatrate, rent: rent };
     return providers;
   }
+}
+
+export enum MediaType {
+  MOVIE = 'movie',
+  TVSHOW = 'tv'
 }

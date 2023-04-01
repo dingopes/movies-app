@@ -3,14 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { Media, MediaImages } from 'src/app/models/media';
 import { Movie } from 'src/app/models/movie';
-import { MoviesService } from 'src/app/services/movies.service';
+import { MediaType, MoviesService } from 'src/app/services/movies.service';
 
 @Component({
-  selector: 'app-movies',
-  templateUrl: './movies.component.html',
-  styleUrls: ['./movies.component.scss']
+  selector: 'app-tvshows',
+  templateUrl: './tvshows.component.html',
+  styleUrls: ['./tvshows.component.scss']
 })
-export class MoviesComponent implements OnInit {
+export class TVshowsComponent implements OnInit {
   movies: Media[] = [];
   mediaImages: MediaImages | null = null;
   genreId: string | null = null;
@@ -18,8 +18,9 @@ export class MoviesComponent implements OnInit {
 
   constructor(private moviesService: MoviesService, private route: ActivatedRoute) {}
 
+  private mediaType = MediaType.TVSHOW;
+
   ngOnInit(): void {
-    console.log('movies init');
     this.route.params.pipe(take(1)).subscribe(({ genreId }) => {
       if (genreId) {
         this.genreId = genreId;
@@ -29,17 +30,16 @@ export class MoviesComponent implements OnInit {
       }
     });
     this.getPagedMovies(1);
-    console.log('movies variable', this.movies);
   }
 
   getPagedMovies(page: number, searchKeyword?: string) {
     if (!searchKeyword) {
-      this.moviesService.getAllMovies(page).subscribe((movies) => {
+      this.moviesService.getAllMovies(page, this.mediaType).subscribe((movies) => {
         this.movies = movies;
         console.log('searchKeyword="undefined"');
       });
     } else {
-      this.moviesService.searchMovies(page, searchKeyword).subscribe((movies) => {
+      this.moviesService.searchMovies(page, searchKeyword, this.mediaType).subscribe((movies) => {
         this.movies = movies;
         console.log('searchKeyword=', searchKeyword);
       });
@@ -47,7 +47,7 @@ export class MoviesComponent implements OnInit {
   }
 
   getMediaByGenre(genreId: string, page: number) {
-    this.moviesService.getMediaByGenre(genreId, page).subscribe((movies) => {
+    this.moviesService.getMediaByGenre(genreId, page, this.mediaType).subscribe((movies) => {
       this.movies = movies;
     });
   }
@@ -66,7 +66,7 @@ export class MoviesComponent implements OnInit {
   }
 
   getMediaImages(id: string) {
-    this.moviesService.getMediaImages(id).subscribe((mediaImagesData) => {
+    this.moviesService.getMediaImages(id, this.mediaType).subscribe((mediaImagesData) => {
       this.mediaImages = mediaImagesData;
     });
   }
